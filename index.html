@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Radar</title>
+
+  <style>
+    :root {
+      --background: #f6f7fb;
+      --surface: #ffffff;
+      --text: #26243b;
+      --muted: #77788d;
+      --border: #e8e7f0;
+      --primary: #6954df;
+      --green: #138365;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font: 15px/1.5 system-ui, sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button, select { cursor: pointer; }
+
+    :focus-visible {
+      outline: 3px solid #b5a8ff;
+      outline-offset: 3px;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: auto;
+      padding: 21px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: white;
+      border-radius: 10px;
+      font-size: 23px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 750;
+      letter-spacing: -.8px;
+    }
+
+    .brand span { color: var(--primary); }
+
+    main {
+      max-width: 1120px;
+      margin: auto;
+      padding: 32px 24px 70px;
+    }
+
+    .panel {
+      padding: 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #29224604;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 16px;
+      background: #fcfbff;
+      border: 1px solid #dcd9ed;
+      border-radius: 12px;
+    }
+
+    .search-box span {
+      color: var(--primary);
+      font-size: 25px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 17px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 22px;
+      margin-top: 23px;
+    }
+
+    .field > label, legend {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    select {
+      padding: 11px 14px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    fieldset {
+      flex: 1;
+      padding: 0;
+      margin: 0;
+      border: 0;
+    }
+
+    .shops {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .shop {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .shop:has(input:checked) {
+      background: #f6f3ff;
+      border-color: #c9bff7;
+    }
+
+    .shop input {
+      margin: 0;
+      accent-color: var(--primary);
+    }
+
+    .primary {
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 650;
+    }
+
+    .primary:hover { background: #5743c8; }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .section-heading {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 15px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.4px;
+    }
+
+    h3 {
+      margin: 0 0 6px;
+      font-size: 23px;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #eeeaff;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 45px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty-icon {
+      margin-bottom: 10px;
+      color: #aaa0db;
+      font-size: 30px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result { margin-top: 16px; }
+
+    .result-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .best {
+      flex-shrink: 0;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: #eaf8f2;
+      color: var(--green);
+      text-align: right;
+    }
+
+    .best small { display: block; }
+
+    .best strong {
+      display: block;
+      font-size: 26px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 26px;
+    }
+
+    .comparison > div { min-width: 0; }
+
+    .graph-row { margin-top: 18px; }
+
+    .graph-label {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+
+    .track {
+      height: 24px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f1f1f7;
+    }
+
+    .bar {
+      height: 100%;
+      min-width: 2px;
+      border-radius: inherit;
+    }
+
+    .offer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .offer-details {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .offer strong { display: block; }
+
+    .offer-price {
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    .offer a {
+      color: var(--primary);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .offer a:hover { text-decoration: underline; }
+
+    .winner { color: var(--green); }
+
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin-right: 7px;
+      border-radius: 3px;
+    }
+
+    .error-text {
+      display: block;
+      margin-top: 4px;
+      color: #b04558;
+      font-size: 12px;
+    }
+
+    .result-note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status.error { color: #b04558; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .secondary {
+      display: inline-block;
+      padding: 8px 13px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .secondary:hover { background: #f8f7ff; }
+
+    .history {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 15px 21px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #fcfbff;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    td { font-size: 13px; }
+
+    td:first-child {
+      max-width: 240px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-note {
+      padding: 14px 21px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 800px) {
+      main { padding: 24px 16px 50px; }
+      .panel { padding: 20px; }
+      fieldset { flex-basis: 100%; }
+      .primary { width: 100%; }
+      .comparison { grid-template-columns: 1fr; gap: 22px; }
+      .result-heading { flex-direction: column; }
+      .best { width: 100%; text-align: left; }
+      .history { padding: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <span class="logo" aria-hidden="true">▥</span>
+      <span class="brand">Book Radar<span>.</span></span>
+    </nav>
+  </header>
+
+  <main>
+    <form class="panel" id="search-form">
+      <div class="search-box">
+        <span aria-hidden="true">⌕</span>
+        <input
+          id="query"
+          type="search"
+          placeholder="Search for a book…"
+          aria-label="Book title"
+          maxlength="250"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="controls">
+        <div class="field">
+          <label for="currency">Currency</label>
+          <select id="currency">
+            <option value="INR">INR · ₹</option>
+            <option value="USD">USD · $</option>
+            <option value="GBP">GBP · £</option>
+            <option value="EUR">EUR · €</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>Compare websites</legend>
+          <div class="shops" id="shops"></div>
+        </fieldset>
+
+        <button class="primary" id="compare" type="submit">
+          Compare prices ↗
+        </button>
+      </div>
+
+      <p class="status" id="status" role="status" hidden></p>
+    </form>
+
+    <div class="section-heading">
+      <h2>Price comparison</h2>
+      <span class="badge" id="result-count">Ready to search</span>
+    </div>
+
+    <div id="results" aria-live="polite">
+      <div class="panel empty">
+        <div class="empty-icon" aria-hidden="true">▥</div>
+        Your comparison graph will appear here.
+      </div>
+    </div>
+
+    <div class="section-heading">
+      <h2>
+        Recent comparisons
+        <span class="badge" id="history-count">0</span>
+      </h2>
+
+      <div class="actions">
+        <button class="secondary" id="clear" type="button">
+          Clear recent list
+        </button>
+
+        <a class="secondary" href="/api/export.csv" download>
+          ↓ Export server CSV
+        </a>
+      </div>
+    </div>
+
+    <section class="panel history" aria-label="Recent comparisons">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Website</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Checked at</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+
+      <div class="empty" id="history-empty">No comparisons yet.</div>
+
+      <div class="history-note">
+        Recent list: this browser.
+        CSV export: all checks saved by your Python backend.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const sources = {
+      "Amazon": "#f5a623",
+      "Flipkart": "#2874f0",
+      "Google Books": "#8270e3",
+      "Apple Books": "#55b69d"
+    };
+
+    const $ = selector => document.querySelector(selector);
+    const storageKey = "book-radar-recent-v3";
+    const allowedCurrencies = ["INR", "USD", "GBP", "EUR"];
+
+    let historyRows = [];
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character]));
+    }
+
+    function money(value, currency) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency
+      }).format(Number(value));
+    }
+
+    function hasPrice(result) {
+      return result.status === "ok" &&
+        result.converted !== null &&
+        result.converted !== "" &&
+        Number.isFinite(Number(result.converted)) &&
+        Number(result.converted) >= 0;
+    }
+
+    function safeURL(value) {
+      try {
+        const url = new URL(value);
+
+        return ["http:", "https:"].includes(url.protocol)
+          ? url.href
+          : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function showStatus(message, error = false) {
+      $("#status").hidden = !message;
+      $("#status").textContent = message;
+      $("#status").className = "status" + (error ? " error" : "");
+    }
+
+    function statusLabel(result) {
+      if (hasPrice(result)) return "Price found";
+
+      const labels = {
+        not_found: "Not found",
+        unavailable: "Unavailable",
+        unsupported: "Unsupported",
+        conversion_error: "Conversion failed",
+        error: "API error"
+      };
+
+      return labels[result.status] || "Unavailable";
+    }
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+      if (Array.isArray(saved)) {
+        historyRows = saved.filter(row =>
+          row &&
+          typeof row.title === "string" &&
+          allowedCurrencies.includes(row.currency)
+        ).slice(-500);
+      }
+    } catch {
+      historyRows = [];
+    }
+
+    $("#shops").innerHTML = Object.keys(sources).map(source => `
+      <label class="shop">
+        <input
+          type="checkbox"
+          value="${escapeHTML(source)}"
+          ${["Amazon", "Flipkart"].includes(source) ? "checked" : ""}
+        >
+        ${escapeHTML(source)}
+      </label>
+    `).join("");
+
+    function saveRecentHistory() {
+      historyRows = historyRows.slice(-500);
+
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(historyRows));
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function renderHistory() {
+      $("#history-count").textContent = historyRows.length;
+      $("#history-empty").hidden = historyRows.length > 0;
+      $("#clear").disabled = historyRows.length === 0;
+
+      $("#history-body").innerHTML = historyRows
+        .slice()
+        .reverse()
+        .map(row => `
+          <tr>
+            <td title="${escapeHTML(row.title)}">
+              ${escapeHTML(row.title)}
+            </td>
+            <td>${escapeHTML(row.source)}</td>
+            <td>
+              ${row.price == null
+                ? "—"
+                : escapeHTML(money(row.price, row.currency))}
+            </td>
+            <td>${escapeHTML(row.status)}</td>
+            <td>
+              ${escapeHTML(new Date(row.at).toLocaleString())}
+            </td>
+          </tr>
+        `).join("");
+    }
+
+    function buildGraph(results, currency) {
+      const available = results.filter(hasPrice);
+
+      if (!available.length) {
+        return `
+          <div class="empty">
+            No available prices to graph.
+          </div>
+        `;
+      }
+
+      const maximum = Math.max(
+        ...available.map(result => Number(result.converted)),
+        1
+      );
+
+      return results.map(result => {
+        const available = hasPrice(result);
+        const width = available
+          ? Number(result.converted) / maximum * 100
+          : 0;
+
+        const price = available
+          ? money(result.converted, currency)
+          : "Unavailable";
+
+        return `
+          <div class="graph-row">
+            <div class="graph-label">
+              <span>${escapeHTML(result.source)}</span>
+              <strong>${escapeHTML(price)}</strong>
+            </div>
+
+            <div
+              class="track"
+              role="img"
+              aria-label="${escapeHTML(result.source + ": " + price)}"
+            >
+              ${available ? `
+                <div
+                  class="bar"
+                  style="
+                    width: ${width}%;
+                    background: ${sources[result.source] || "#8270e3"};
+                  "
+                ></div>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderBook(book, currency) {
+      const available = book.results
+        .filter(hasPrice)
+        .sort((a, b) => Number(a.converted) - Number(b.converted));
+
+      const best = available[0];
+
+      const spread = best
+        ? Number(available[available.length - 1].converted) -
+          Number(best.converted)
+        : 0;
+
+      const section = document.createElement("section");
+      section.className = "panel result";
+
+      section.innerHTML = `
+        <div class="result-heading">
+          <div>
+            <h3>${escapeHTML(book.query)}</h3>
+
+            <div class="muted">
+              ${book.results.length} websites checked
+              · ${escapeHTML(currency)}
+              ${spread > 0
+                ? " · Price difference " +
+                  escapeHTML(money(spread, currency))
+                : ""}
+            </div>
+          </div>
+
+          ${best ? `
+            <div class="best">
+              <small>LOWEST RETURNED PRICE</small>
+              <strong>
+                ${escapeHTML(money(best.converted, currency))}
+              </strong>
+              <small>${escapeHTML(best.source)}</small>
+            </div>
+          ` : ""}
+        </div>
+
+        <div class="comparison">
+          <div>
+            <div class="muted">Price by website</div>
+            ${buildGraph(book.results, currency)}
+          </div>
+
+          <div>
+            ${book.results.map(result => {
+              const available = hasPrice(result);
+              const url = safeURL(result.url);
+
+              const cheapest = available && best &&
+                Number(result.converted) === Number(best.converted);
+
+              const authors = Array.isArray(result.authors)
+                ? result.authors.join(", ")
+                : "";
+
+              return `
+                <div class="offer">
+                  <div class="offer-details">
+                    <strong>
+                      <span
+                        class="dot"
+                        style="
+                          background:
+                            ${sources[result.source] || "#8270e3"};
+                        "
+                      ></span>
+                      ${escapeHTML(result.source)}
+                    </strong>
+
+                    ${result.title ? `
+                      <div class="muted">
+                        ${escapeHTML(result.title)}
+                      </div>
+                    ` : ""}
+
+                    ${authors ? `
+                      <div class="muted">
+                        ${escapeHTML(authors)}
+                      </div>
+                    ` : ""}
+
+                    ${result.match != null ? `
+                      <div class="muted">
+                        ${escapeHTML(result.match)}% title similarity
+                      </div>
+                    ` : ""}
+
+                    ${result.country ? `
+                      <div class="muted">
+                        Store country: ${escapeHTML(result.country)}
+                      </div>
+                    ` : ""}
+
+                    ${!available ? `
+                      <span class="error-text">
+                        ${escapeHTML(
+                          result.error || statusLabel(result)
+                        )}
+                      </span>
+                    ` : ""}
+                  </div>
+
+                  <div class="offer-price">
+                    <strong class="${cheapest ? "winner" : ""}">
+                      ${available
+                        ? escapeHTML(money(result.converted, currency))
+                        : "—"}
+                    </strong>
+
+                    ${url ? `
+                      <a
+                        href="${escapeHTML(url)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >View listing ↗</a>
+                    ` : ""}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <p class="result-note">
+          Check the edition, language and format before comparing.
+          Shipping and checkout charges may differ.
+        </p>
+      `;
+
+      $("#results").append(section);
+    }
+
+    $("#search-form").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const query = $("#query").value.trim();
+      const currency = $("#currency").value;
+
+      const selected = [
+        ...document.querySelectorAll("#shops input:checked")
+      ].map(input => input.value);
+
+      if (!query) {
+        showStatus("Enter a book title.", true);
+        return;
+      }
+
+      if (!selected.length) {
+        showStatus("Select at least one website.", true);
+        return;
+      }
+
+      $("#compare").disabled = true;
+      $("#compare").textContent = "Comparing…";
+      $("#results").setAttribute("aria-busy", "true");
+      showStatus("Checking selected websites…");
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 90000);
+
+      try {
+        const parameters = new URLSearchParams({
+          q: query,
+          base: currency,
+          sources: selected.join(",")
+        });
+
+        const response = await fetch("/api/search?" + parameters, {
+          signal: controller.signal
+        });
+
+        let data;
+
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error("The backend returned an invalid response.");
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || "Server error " + response.status);
+        }
+
+        if (
+          !Array.isArray(data.books) ||
+          !data.books.every(book =>
+            book &&
+            Array.isArray(book.results) &&
+            book.results.every(result =>
+              result && typeof result.source === "string"
+            )
+          )
+        ) {
+          throw new Error("Unexpected search response.");
+        }
+
+        $("#results").innerHTML = "";
+
+        $("#result-count").textContent =
+          data.books.length +
+          (data.books.length === 1 ? " book" : " books");
+
+        const checkedAt = data.checked_at || new Date().toISOString();
+        let foundPrices = 0;
+
+        data.books.forEach(book => {
+          book.query = book.query || query;
+          renderBook(book, currency);
+
+          book.results.forEach(result => {
+            if (hasPrice(result)) foundPrices++;
+
+            historyRows.push({
+              title: String(book.query),
+              source: result.source,
+              price: hasPrice(result)
+                ? Number(result.converted)
+                : null,
+              currency,
+              status: statusLabel(result),
+              at: checkedAt
+            });
+          });
+        });
+
+        if (!data.books.length) {
+          $("#results").innerHTML = `
+            <div class="panel empty">
+              No matching books found. Try another title.
+            </div>
+          `;
+        }
+
+        const browserSaved = saveRecentHistory();
+        renderHistory();
+
+        const messages = [];
+
+        if (!foundPrices) {
+          messages.push(
+            "No prices returned. Check the store messages below."
+          );
+        }
+
+        if (data.history_saved === false) {
+          messages.push(
+            "Server CSV could not be saved. Check data-folder permissions."
+          );
+        }
+
+        if (!browserSaved) {
+          messages.push(
+            "Browser history could not be saved."
+          );
+        }
+
+        showStatus(
+          messages.join(" "),
+          !foundPrices || data.history_saved === false
+        );
+
+      } catch (error) {
+        showStatus(
+          error.name === "AbortError"
+            ? "The search took too long. Please try again."
+            : error.message +
+              " Open this page through http://127.0.0.1:5000.",
+          true
+        );
+      } finally {
+        clearTimeout(timeout);
+        $("#compare").disabled = false;
+        $("#compare").textContent = "Compare prices ↗";
+        $("#results").setAttribute("aria-busy", "false");
+      }
+    });
+
+    $("#clear").addEventListener("click", () => {
+      const confirmed = confirm(
+        "Clear the recent list in this browser? " +
+        "Your server CSV will remain available."
+      );
+
+      if (!confirmed) return;
+
+      historyRows = [];
+      const saved = saveRecentHistory();
+      renderHistory();
+
+      if (!saved) {
+        showStatus(
+          "The displayed list was cleared, but browser storage could not be updated.",
+          true
+        );
+      }
+    });
+
+    renderHistory();
+  </script>
+</body>
+</html>
